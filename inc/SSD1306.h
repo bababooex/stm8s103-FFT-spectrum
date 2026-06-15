@@ -11,8 +11,8 @@
 #define column_start  0
 #define column_end    127
 #define page_start    0
-#define page_end      3
-
+#define page_end      7
+#define BUFF_SIZE     1024
 //----------------------------------------------------------------------------------
 
 extern unsigned char            lcd_buff[];
