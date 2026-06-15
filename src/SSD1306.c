@@ -2,17 +2,7 @@
 #include "main.h"
 #include "SSD1306.h"
 
-//----------------------------------------------------------------------------------
-#define DATA_MODE       0x40
-#define COMMAND_MODE    0x00   // bit Co = 0, D/C# = 0
-#define BUFF_SIZE       512
 
-#define column_start  0
-#define column_end    127
-#define page_start    0
-#define page_end      3
-
-//----------------------------------------------------------------------------------
 u8  lcd_buff[BUFF_SIZE];
 u16 lcd_buff_idx=0;
 u8  x_cur=0, y_cur=0;
@@ -20,7 +10,7 @@ u8  x_cur=0, y_cur=0;
 const u8 comm[]={ 
    0xAE,             //Display Off
    0xD5,0x80,
-   0xA8,0x1F,        //Set Multiplex Ratio              
+   0xA8,0x3F,        //Set Multiplex Ratio              
    0xD3,0x00,
    0x40,
    
@@ -36,7 +26,7 @@ const u8 comm[]={
    0xA1,             //Set Segment Re-map
    0xC8,             //Vertical flip    C0/C8
    
-   0xDA,0x02,        //Set COM Pins Hardware Configuration 
+   0xDA,0x12,        //Set COM Pins Hardware Configuration 
    
    0x81,0x0A,        //Set Contrast Control 
    0xD9,0xF1,        //Set Pre-Charge Period:  0x22 = VCC Supplied Externally  \
@@ -96,7 +86,7 @@ void LCD_Update(void)
    LCD_command(column_end);     // column end
    LCD_command(0x22);           // SSD1306_PAGEADDR
    LCD_command(page_start);     // page start
-   LCD_command(page_end);       // page end (4 pages for 32 rows OLED)
+   LCD_command(page_end);       // page end (8 pages for 64 rows OLED)
    
    disableInterrupts();
    
@@ -135,7 +125,7 @@ void LCD_Chr(u8 ch)
    {
       x_cur=0;
       y_cur++;
-      if (y_cur>3)
+      if (y_cur>7)
       {
          y_cur=0;
       }
@@ -152,7 +142,7 @@ void LCD_FStr(const u8 *dataPtr){
 //----------------------------------------------------------------------------------
 
 void LCD_GotoXY(u8 x,u8 y){
-    if((x<21)&&(y<4)){
+    if((x<21)&&(y<8)){
       x_cur=x;
       y_cur=y;
     }
